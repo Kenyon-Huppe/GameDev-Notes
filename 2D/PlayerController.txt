@@ -1,0 +1,94 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    Rigidbody2D body;
+
+    // Movement
+    public float horizontalInput;
+    public float verticalInput;
+    private float speed = 5f;
+    private float movementLimiter = 0.7f; // to move at a slower speed
+
+    // fliping sprite
+    public bool facingRight;
+
+    // Range of play area
+    private float leftRange = -12.53f;
+    private float rightRange = 10.77f;
+    private float topRange = 2.59f;
+    private float bottomRange = -3.5f;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        body = GetComponent<Rigidbody2D>(); // to allow for physics in movement
+        facingRight = false;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        // Gives a value between -1 and 1
+        horizontalInput = Input.GetAxisRaw("Horizontal"); // -1 is left
+        verticalInput = Input.GetAxisRaw("Vertical"); // -1 is down
+
+        Flip();
+
+        Border();
+    }
+
+    // controlls players movment
+    void FixedUpdate() // method is used when phyics is needed to be applied every frame
+    {
+        if (horizontalInput != 0 && verticalInput != 0) // Check for diagonal movement
+        {
+            // limit movement speed diagonally, so you move at 70% speed
+            horizontalInput *= movementLimiter;
+            verticalInput *= movementLimiter;
+        }
+
+        // Don't use transform function's because 2D games don't need drag
+
+        body.velocity = new Vector2(horizontalInput * speed, verticalInput * speed);
+    }
+
+    // allows player to flip when changing direction
+    public void Flip()
+    {
+        if((horizontalInput < 0 && facingRight) || (horizontalInput > 0 && !facingRight))
+        {
+            facingRight = !facingRight;
+            transform.Rotate(new Vector3(0, 180, 0));
+        }
+    }
+
+    // To prevent player from breaching world borders
+    public void Border()
+    {
+        // horizontal border control
+        if (transform.position.x < leftRange)
+        {
+            transform.position = new Vector2(leftRange, transform.position.y);
+        }
+        else if (transform.position.x > rightRange)
+        {
+            transform.position = new Vector2(rightRange, transform.position.y);
+        }
+
+        // vertical border control
+        if (transform.position.y < bottomRange)
+        {
+            transform.position = new Vector2(transform.position.x, bottomRange);
+        }
+        else if (transform.position.y > topRange)
+        {
+            transform.position = new Vector2(transform.position.x, topRange);
+        }
+    }
+
+    // Allows player to launch projectile prefab wherever mouse clicks
+    
+}

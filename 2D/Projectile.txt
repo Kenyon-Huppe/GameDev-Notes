@@ -1,0 +1,59 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Projectile : MonoBehaviour
+{
+    private float leftRange = -13.5f;
+    private float rightRange = 12f;
+    private float topRange = 5f;
+    private float bottomRange = -6f;
+
+
+    public GameObject projectile;
+    public GameObject firePoint;
+    private float attackRate = 2f; // number of attacks per second
+    private float nextAttackTime = 0f;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //  transform.Translate(Vector3.left * Time.deltaTime * speed);
+        Border();
+        Shoot();
+    }
+
+
+    public void Border()
+    {
+        if (transform.position.x >= rightRange || transform.position.x <= leftRange)
+        {
+            Destroy(gameObject);
+        }
+        else if (transform.position.y >= topRange || transform.position.y <= bottomRange)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void Shoot()
+    {
+        if (Time.time >= nextAttackTime)
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
+                nextAttackTime = Time.time + 1f / attackRate;
+            }
+        }
+    }
+}
+
+
+

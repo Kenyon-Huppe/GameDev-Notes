@@ -1,0 +1,79 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    public float horizontalInput;
+    public float verticalInput;
+    private float speed = 20.0f;
+    private float xRange = 23.0f;
+    private float upperLimit = 14.0f;
+    private float lowerLimit = -1.0f;
+
+    public GameObject projectilePrefab;
+    private GameObject instanciatedObject;
+    private float time = 0.9f; // the time until projectilePrefab is destroyed (to preserve space)
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        Movement();
+        Border();
+        LaunchProjectile();
+    }
+
+    // allows for movement of the player based on specific keys
+    void Movement()
+    {
+        // allows for right and left movment
+        horizontalInput = Input.GetAxis("Horizontal");
+        transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput);
+
+        // allows for forward and back movment
+        verticalInput = Input.GetAxis("Vertical");
+        transform.Translate(Vector3.forward * Time.deltaTime * speed * verticalInput);
+    }
+
+    // dis-allows the player from leaving the space
+    void Border()
+    {
+        // to stop player from going out-of-bounds on right / left side
+        if (transform.position.x < -xRange) // -xRange spaces to the left of the origin
+        {
+            transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
+        }
+        else if (transform.position.x > xRange) // to stop player from going out-of-bounds on right side
+        {                                        // xRangespaces to the right of the origin
+            transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
+        }
+
+        // to stop player from going out-of-bounds on forward / back side
+        if (transform.position.z < lowerLimit)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, lowerLimit);
+        }
+        else if (transform.position.z > upperLimit)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, upperLimit);
+        }
+    }
+
+    // for launching projectilePrefab
+    void LaunchProjectile()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        { // gets the prefab object, the position (player's position in this case), and the rotation (projectilePrefab's rotation)
+            instanciatedObject = Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
+
+            // takes in an object and a time until destruction of said object
+            Destroy(instanciatedObject, time);
+        }
+    }
+}

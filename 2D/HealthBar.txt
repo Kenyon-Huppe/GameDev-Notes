@@ -1,0 +1,32 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class HealthBar : MonoBehaviour
+{
+    public Slider slider;
+
+    Quaternion rotation;
+    void Awake()
+    {
+        rotation = transform.rotation;
+    }
+    void LateUpdate()
+    {
+        transform.rotation = rotation;
+    }
+
+    // sets the max health
+    public void SetMaxHealth(int health)
+    {
+        slider.maxValue = health; // sets max health
+        slider.value = health; // sets current value to max health
+    }
+
+    // sets health
+    public void SetHealth(int health)
+    {  
+        slider.value = health;
+    }
+}

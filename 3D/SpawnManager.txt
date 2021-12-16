@@ -1,0 +1,41 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SpawnManager : MonoBehaviour
+{
+    public GameObject[] animalPrefabs; // holds animal prefabs
+    private float spawnRangeX = 20;
+    private float spawnPositionZ = 24; // look into z value
+    private float startDelay = 2;
+    private float interval = 1.5f;
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        InvokeRepeating("SpawnRandomAnimal", startDelay, interval); // method, start time, interval
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    // spawns random animal
+    void SpawnRandomAnimal()
+    {
+        int animalIndex = Random.Range(0, animalPrefabs.Length); // first number inclusive,
+                                                                 // second number exclusive
+                                                                 // NOTICE: capital 'L' for
+                                                                 // "Length"
+
+        Vector3 spawnPosition = new Vector3(Random.Range(-spawnRangeX, spawnRangeX),
+            0, spawnPositionZ);
+
+        // Instanciate method requires arguments of: Object, position, and rotation
+        Instantiate(animalPrefabs[animalIndex], spawnPosition,
+            animalPrefabs[animalIndex].transform.rotation);
+    }
+}

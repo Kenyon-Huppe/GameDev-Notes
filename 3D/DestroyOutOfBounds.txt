@@ -1,0 +1,37 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class DestroyOutOfBounds : MonoBehaviour
+{ 
+    private float upperBound = 37f;
+    private float lowerBound = -17f;
+    private float xRange = 25f;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(gameObject.transform.position.z > upperBound) // if game object is passed upperBound
+        {
+            Destroy(gameObject);
+        } else if(gameObject.transform.position.z < lowerBound) // if game object is passed lowerBound
+        {
+            Destroy(gameObject);
+        } 
+
+        if(gameObject.transform.position.x > xRange) // if game object is passed right bound
+        {
+            Destroy(gameObject);
+        }
+        else if (gameObject.transform.position.x < -xRange) // if game object is passed left bound
+        {
+            Destroy(gameObject);
+        }
+    }
+}
